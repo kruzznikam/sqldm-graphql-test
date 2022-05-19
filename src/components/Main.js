@@ -51,7 +51,9 @@ const Main = () => {
   useEffect(() => {
     if (data?.characters?.results) {
       if (isInfiniteScrolingOn) {
-      setCharacterData(prevData => ([...prevData, ...data.characters.results ]));
+        const newArry = [...characterData, ...data.characters.results];
+        const uniqueChar = [... new Map(newArry.map((item) => [item.id, item])).values()]
+      setCharacterData(uniqueChar);
       } else setCharacterData(data.characters.results);
     }
   }, [data, isInfiniteScrolingOn]);
@@ -61,7 +63,7 @@ const Main = () => {
   return (
       <div>
       {characterData.map(character => (
-        <div key={character.name}>
+        <div key={character.id}>
           <p>{character.name}</p>
           <img src={character.image} alt={`${character.name}`} />
           <p>Location -&gt; {character.location.name}    {character.location.type}</p>
@@ -71,7 +73,6 @@ const Main = () => {
       <div className="navFixed">
         <label>Infinite Scroling</label>
         <input type='checkbox' checked={isInfiniteScrolingOn} onChange={(event) => {setIsInfiniteScrolingOn(event.target.checked)}}/> <br />
-        <span>Current Page {page}</span>
         <button
           onClick={() => setPage(prevState => Math.max(prevState - 1, 0))}
           disabled={page === 1 || isInfiniteScrolingOn}
@@ -83,6 +84,7 @@ const Main = () => {
         </button>
         {isFetching ? <span>Fetching...</span> : null}
         <p>Previous Page {data.characters.info.prev || 0}</p>
+        <p>Current Page {page}</p>
         <p>Next Page {data.characters.info.next || 0}</p>
         <p>Total Pages {data.characters.info.pages}</p>
         <p>Total Count {data.characters.info.count}</p>
