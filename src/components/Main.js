@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import gql from "graphql-tag";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGQLQuery } from "../hooks/useGQLQuery";
@@ -18,7 +19,7 @@ const GET_CHARACTERS = gql`
       info {
         count
         pages
-        next 
+        next
         prev
       }
     }
@@ -32,7 +33,6 @@ const Main = () => {
   const [characterData, setCharacterData] = useState([]);
 
   const {data, isLoading, error, isFetching, status} = useGQLQuery(['characters', page], GET_CHARACTERS, { page });
-  console.log(characterData);
 
   const scrollHandler = useCallback(() => {
     if (buttonRef.current.getBoundingClientRect().top <= window.innerHeight) {
@@ -52,7 +52,7 @@ const Main = () => {
     if (data?.characters?.results) {
       if (isInfiniteScrolingOn) {
         const newArry = [...characterData, ...data.characters.results];
-        const uniqueChar = [... new Map(newArry.map((item) => [item.id, item])).values()]
+        const uniqueChar = [...new Map(newArry.map((item) => [item.id, item])).values()]
       setCharacterData(uniqueChar);
       } else setCharacterData(data.characters.results);
     }
